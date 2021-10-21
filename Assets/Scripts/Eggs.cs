@@ -6,9 +6,9 @@ using UnityEngine.Networking;
 
 public class Eggs : MonoBehaviour
 {
-    public Text user;
-    public Text eggs;
- 
+    //public Text user;
+    //public Text eggs;
+    public static Text messageFromServer;
 
 
     [System.Serializable]
@@ -20,15 +20,15 @@ public class Eggs : MonoBehaviour
         public string date;
     }
 
-    private IEnumerator allEggs(string value, string date)
+    public static IEnumerator addEggs(string value, string date)
     {
         string function = "add_eggs";
         //Debug.Log("SendRequest start");
         //string user_key = this.userId;
-        if (!(SessionDate.userId == null) && !(user.text == null))
+        if (!(SessionDate.userId == null) && !(SessionDate.user == null))
         {
             WWWForm formdata = new WWWForm();
-            formdata.AddField("user", user.text);
+            formdata.AddField("user", SessionDate.user);
             formdata.AddField("user_key", SessionDate.userId);
             formdata.AddField("function", function);
             formdata.AddField("value", value);
@@ -39,11 +39,11 @@ public class Eggs : MonoBehaviour
             yield return request.SendWebRequest();
             Debug.Log("Ответ сервера - " + request.downloadHandler.text);
 
-            //PostStruct postFromServer = JsonUtility.FromJson<PostStruct>(request.downloadHandler.text);
+            PostStruct postFromServer = JsonUtility.FromJson<PostStruct>(request.downloadHandler.text);
 
             //Debug.Log(postFromServer.message);
 
-            //Message.text = postFromServer.message;
+            messageFromServer.text = postFromServer.message;
             //eggs.text = postFromServer.eggs;
             //range.text = "за " + postFromServer.range + " дней";
         }
@@ -73,7 +73,7 @@ public class Eggs : MonoBehaviour
 // Start is called before the first frame update
 void Start()
     {
-        user.text = SessionDate.user;
+
     }
 
     // Update is called once per frame
